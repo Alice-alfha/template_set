@@ -1,20 +1,3 @@
-# 整数がkeyのhash被り対策xor
-# 10^12まで, 約2,200億くらいでok
-from heapq import heappop, heappush, heapify
-XOR = 2843104044914
-
-
-# AtCoderの「~の余りを求めよ」問題の剰余部分
-# これは素数
-MOD = 998244353
-
-
-# hash対策のxorをしてくれる関数
-def xor(n):
-    XOR = 2843104044914
-    return n ^ XOR
-
-
 # Union-find (毎回書くのが面倒)
 # find: rootノード探索, union: 2ノードを接続, connected: 2ノードの接続判定
 # rank: rootノードにするノードの優先度 (高いほどより優先的にrootになる)
@@ -44,34 +27,6 @@ class Unionfind:
 
     def connected(self, x, y):
         return self.find(x) == self.find(y)
-
-
-# ダイクストラ法
-# 処理は「有向グラフ」であることに注意（無向グラフの場合は双方向の有向グラフにしておく）
-def dijkstra(graph, start, goal, node_num):
-    import heapq
-
-    queue = [(0, start)]
-    mincost = [10 ** 18] * (node_num+1)
-    visited = set()
-
-    heapq.heapify(queue)
-
-    while queue:
-        tcost, v = heapq.heappop(queue)
-        mincost[v] = min(tcost, mincost[v])
-
-        if v in visited:
-            continue
-
-        visited.add(v)
-        if v in graph:
-            for i in graph[v]:
-                nv, cost = i
-                if cost + tcost < mincost[nv]:
-                    heapq.heappush(queue, (cost+tcost, nv))
-
-    return mincost[goal]
 
 
 # Segment Tree (何回も書きたくない)
@@ -145,7 +100,7 @@ class SegTree:
         return self.tree[1]
 
 
-# Lazy Segment Tree
+# Lazy Segment Tree（完成していない）
 # class_function: set, get, prod
 class LazySegTree:
     def __init__(self, values: list, segfunc, ide):
@@ -270,43 +225,6 @@ def eratosthenes(maxN: int):
             t += i * 2
 
     return prime
-
-
-# mexライブラリ (heappop, heappush, heapifyが必要) (mex: xの補集合で最小の値)
-#
-class Mex:
-    def __init__(self, arr=[], MAX=10**6) -> None:
-        self.MAX = MAX + 5
-        self.hist = [0] * (self.MAX+1)
-        for a in arr:
-            if a > self.MAX:
-                continue
-            self.hist[a] += 1
-        self.q = []
-        self.d = []
-        for i in range(self.MAX+1):
-            if self.hist[i] == 0:
-                heappush(self.q, i)
-
-    def get(self):
-        while self.q and self.d and self.q[0] == self.d[0]:
-            heappop(self.q)
-            heappop(self.d)
-        return self.q[0] if self.q else None
-
-    def add(self, x):
-        if x > self.MAX:
-            return
-        self.hist[x] += 1
-        if self.hist[x] == 1:
-            heappush(self.d, x)
-
-    def remove(self, x):
-        if x > self.MAX:
-            return
-        self.hist[x] -= 1
-        if self.hist[x] == 0:
-            heappush(self.q, x)
 
 
 # BIT
