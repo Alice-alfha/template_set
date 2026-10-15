@@ -15,39 +15,6 @@ def xor(n):
     return n ^ XOR
 
 
-# 逆元関数(拡張ユークリッド法)
-# n, modが互いに素なら使用可能
-def rmod(n, mod=998244353):
-    if n == 0:
-        return 0
-
-    a, u, v = mod, 1, 0
-    while a:
-        t = n // a
-        n, a = a, n - t * a
-        u, v = v, u - t * v
-
-    return u % mod
-
-
-# 有理数のmodをとるやつ
-def invmod(n, m, mod=998244353):
-    def rmod(n, mod):
-        if n == 0:
-            return 0
-
-        a, u, v = mod, 1, 0
-        while a:
-            t = n // a
-            n, a = a, n - t * a
-            u, v = v, u - t * v
-
-        return u % mod
-
-    r = rmod(m, mod)
-    return (n * r) % mod
-
-
 # Union-find (毎回書くのが面倒)
 # find: rootノード探索, union: 2ノードを接続, connected: 2ノードの接続判定
 # rank: rootノードにするノードの優先度 (高いほどより優先的にrootになる)
