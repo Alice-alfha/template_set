@@ -1,3 +1,4 @@
+# https://github.com/Alice-alfha/template_set/blob/main/union.py
 # AI製()
 class UnionFind:
     def __init__(self, n: int):
