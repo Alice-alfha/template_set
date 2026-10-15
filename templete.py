@@ -29,7 +29,7 @@ class Unionfind:
         return self.find(x) == self.find(y)
 
 
-# Segment Tree (何回も書きたくない)
+# Segment Tree
 # 0-indexed
 # class_function: set, get, prod, all_prod
 class SegTree:
@@ -207,7 +207,7 @@ class LazySegTree:
             lazy[nindex] = 0
 
 
-# エラトステネスの篩 (割とちゃんと最適化したやつ)
+# エラトステネスの篩
 # 10 ** 7で 600msくらい
 def eratosthenes(maxN: int):
     prime = [2]
