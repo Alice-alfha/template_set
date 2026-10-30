@@ -1,5 +1,5 @@
 # エラトステネスの篩
-# 10 ** 7で 600msくらい
+# 10^7で 600msくらい
 def eratosthenes(maxN: int):
     prime = [2]
     m = set()
