@@ -1,4 +1,4 @@
-# Generate AI
+# AI製セグメントツリー
 
 # Segment Tree
 # 0-indexed
