@@ -1,3 +1,5 @@
+# Generate AI
+
 # Segment Tree
 # 0-indexed
 # class_function: set, get, prod, all_prod
