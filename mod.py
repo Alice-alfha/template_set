@@ -1,6 +1,17 @@
-# https://strangerxxx.hateblo.jp/entry/20230419/1681873929の記事参考（というかほぼそのまま）
+# https://linus-mk.hatenablog.com/entry/2020/02/23/225258の記事参考（というかほぼそのまま）
 
-# 有理数のmodをとるやつ
-def invmod(n, m, mod=998244353):
-    r = pow(m, -1, mod)
-    return (n * r) % mod
+
+# mod対応組合せ関数 (計算量: O(r))
+def mod_comb(n, r, mod=998244353):
+    if n < r or r < 0:
+        return 0
+    if n-r < r:
+        r = n-r
+
+    res = 1
+    for i in range(r):
+        res *= n-i
+        res *= pow(i+1, -1, mod)
+        res %= mod
+
+    return res
