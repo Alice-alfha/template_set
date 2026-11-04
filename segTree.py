@@ -2,72 +2,107 @@
 
 # Segment Tree
 # 0-indexed
-# class_function: set, get, prod, all_prod
+# max_right: f(op(l, l+1, ..., r))=Trueとなる最大のrを返す
 class SegTree:
-    from typing import Union
-
-    def __init__(self, values: int | list, op, ide):
-
-        if isinstance(values, int):
-            rank = 1 << (values-1).bit_length()
-        elif isinstance(values, list):
-            rank = 1 << (len(values)-1).bit_length()
+    def __init__(self, op, e, n_or_a):
+        if isinstance(n_or_a, int):
+            a = []
+            n = n_or_a
         else:
-            raise NotImplementedError()
+            a = list(n_or_a)
+            n = len(a)
+        size = 1
+        while size < n:
+            size *= 2
+        d = [e] * (2 * size)
+        if a:
+            d[size:size + n] = a
+            for i in range(size - 1, 0, -1):
+                d[i] = op(d[2 * i], d[2 * i + 1])
+        self.op = op
+        self.e = e
+        self.n = n
+        self.size = size
+        self.d = d
 
-        self._op = op
-        self._ide = ide
-        self._tree_size = rank
-        tree = [ide for _ in range(rank * 2)]
+    def set(self, p, x):
+        d = self.d
+        op = self.op
+        p += self.size
+        d[p] = x
+        while p > 1:
+            p >>= 1
+            d[p] = op(d[2 * p], d[2 * p + 1])
 
-        if isinstance(values, list):
-            for i in range(len(values)):
-                tree[rank+i] = values[i]
+    def get(self, p):
+        return self.d[p + self.size]
 
-            for i in range(rank-1, 0, -1):
-                tree[i] = op(tree[i << 1], tree[(i << 1) + 1])
+    def prod(self, l, r):
+        d = self.d
+        op = self.op
+        sml = smr = self.e
+        l += self.size
+        r += self.size
+        while l < r:
+            if l & 1:
+                sml = op(sml, d[l])
+                l += 1
+            if r & 1:
+                r -= 1
+                smr = op(d[r], smr)
+            l >>= 1
+            r >>= 1
+        return op(sml, smr)
 
-        self.tree = tree
+    def all_prod(self):
+        return self.d[1]
 
-    def set(self, index: int, element) -> None:
-        tree = self.tree
-        index += self._tree_size
-        tree[index] = element
-        op = self._op
+    def max_right(self, l, f):
+        n = self.n
+        if l >= n:
+            return n
+        d = self.d
+        op = self.op
+        size = self.size
+        l += size
+        sm = self.e
+        while True:
+            while l % 2 == 0:
+                l >>= 1
+            if not f(op(sm, d[l])):
+                while l < size:
+                    l *= 2
+                    if f(op(sm, d[l])):
+                        sm = op(sm, d[l])
+                        l += 1
+                return l - size
+            sm = op(sm, d[l])
+            l += 1
+            if (l & -l) == l:
+                return n
 
-        while index > 1:
-            index >>= 1
-            tree[index] = op(tree[index << 1], tree[index << 1 | 1])
-
-    def get(self, index: int) -> any:
-        return self.tree[self._tree_size + index]
-
-    def prod(self, l_: int, r_: int) -> any:
-        l_res = self._ide
-        r_res = self._ide
-        tree = self.tree
-        op_ = self._op
-        l_ += self._tree_size
-        r_ += self._tree_size - 1
-
-        if l_ == r_:
-            return tree[l_]
-
-        while l_ <= r_:
-            if l_ & 1:
-                l_res = op_(l_res, tree[l_])
-                l_ += 1
-            if not r_ & 1:
-                r_res = op_(tree[r_], r_res)
-                r_ -= 1
-
-            l_ >>= 1
-            r_ >>= 1
-
-        return op_(l_res, r_res)
-
-    def all_prod(self) -> any:
-        return self.tree[1]
+    def min_left(self, r, f):
+        if r <= 0:
+            return 0
+        d = self.d
+        op = self.op
+        size = self.size
+        r += size
+        sm = self.e
+        while True:
+            r -= 1
+            while r > 1 and r % 2:
+                r >>= 1
+            if not f(op(d[r], sm)):
+                while r < size:
+                    r = 2 * r + 1
+                    if f(op(d[r], sm)):
+                        sm = op(d[r], sm)
+                        r -= 1
+                return r + 1 - size
+            sm = op(d[r], sm)
+            if (r & -r) == r:
+                return 0
 
 
 # Lazy Segment Tree
