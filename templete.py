@@ -1,11 +1,11 @@
 # エラトステネスの篩（戻り値: 素数の昇順list）
-# 10^8で 80msくらい
+# 10^8で 55msくらい
 def eratosthenes(maxN: int):
     sieve = bytearray([0, 1]) * ((maxN+1)//2+1)
     sieve[1] = 0
     sieve[2] = 1
 
-    for i in range(3, maxN, 2):
+    for i in range(3, int(pow(maxN, 0.5))+1, 2):
         if sieve[i]:
             sieve[i*i::i*2] = bytearray(len(range(i*i, 2*(maxN+1)//2+2, i*2)))
 
