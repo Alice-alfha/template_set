@@ -1,21 +1,15 @@
 # エラトステネスの篩
-# 10^7で 600msくらい
+# 10^8で 80msくらい
 def eratosthenes(maxN: int):
-    prime = [2]
-    m = set()
+    sieve = bytearray([0, 1]) * ((maxN+1)//2+1)
+    sieve[1] = 0
+    sieve[2] = 1
 
     for i in range(3, maxN, 2):
-        if i in m:
-            continue
+        if sieve[i]:
+            sieve[i*i::i*2] = bytearray(len(range(i*i, 2*(maxN+1)//2+2, i*2)))
 
-        prime.append(i)
-
-        t = pow(i, 2)
-        while maxN > t:
-            m.add(t)
-            t += i * 2
-
-    return prime
+    return [x for x in range(maxN) if sieve[x]]
 
 
 # BIT
