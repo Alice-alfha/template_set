@@ -1,4 +1,4 @@
-# エラトステネスの篩
+# エラトステネスの篩（戻り値: 素数の昇順list）
 # 10^8で 80msくらい
 def eratosthenes(maxN: int):
     sieve = bytearray([0, 1]) * ((maxN+1)//2+1)
