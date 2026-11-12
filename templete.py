@@ -15,7 +15,7 @@ def eratosthenes(maxN: int):
 
 
 # 線形篩 (戻り値: 最小素因数のlist)
-# 10^7で 100msくらい
+# 10^7で 70msくらい
 def linear_sieve(maxN: int):
     spf = [x for x in range(maxN+1)]
     p = []
@@ -25,9 +25,12 @@ def linear_sieve(maxN: int):
             p.append(i)
 
         for j in p:
-            if i*j > maxN or j > i:
+            if i*j > maxN:
                 break
             spf[i*j] = j
+
+            if j == spf[i]:
+                break
 
     return spf
 
